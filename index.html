@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio & Project Demos</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0a0c10;
+            --bg-elev: #0f1117;
+            --text: #e6e9ef;
+            --muted: #a9b1bc;
+            --line: #1a2030;
+            --accent-1: #7c5cff;
+            --accent-2: #00e5ff;
+            --accent-3: #3de38a;
+            --radius-lg: 18px;
+            --radius-md: 14px;
+            --shadow-1: 0 10px 30px rgba(0,0,0,0.45);
+        }
+
+        /* ♡ ─ ──────────────────────────── ♡ 💟 ♡ ──────────────────────────── ─ ♡ */
+        /*              SPLASH SCREEN: cosmic loading experience                 */
+        /* ♡ ─ ──────────────────────────── ♡ 💟 ♡ ──────────────────────────── ─ ♡ */
+
+        .splash-screen {
+            position: fixed;
+            inset: 0;
+            background: var(--bg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            overflow: hidden;
+            transition: opacity 0.8s ease, visibility 0.8s ease;
+        }
+
+        .splash-screen.fade-out {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .splash-content {
+            text-align: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .splash-logo {
+            font-size: clamp(3rem, 10vw, 6rem);
+            font-weight: 700;
+            font-family: 'Space Grotesk', sans-serif;
+            background: linear-gradient(135deg, var(--accent-1), var(--accent-2), var(--accent-3));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+            animation: logoGlow 2s ease-in-out infinite alternate;
+        }
+
+        .splash-tagline {
+            color: var(--muted);
+            font-size: 1.2rem;
+            font-weight: 500;
+            margin-bottom: 2rem;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease 0.5s forwards;
+        }
+
+        .loading-bar-container {
+            width: 300px;
+            height: 4px;
+            background: rgba(26, 32, 48, 0.8);
+            border-radius: 2px;
+            margin: 2rem auto;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .loading-bar {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--accent-1), var(--accent-2), var(--accent-3));
+            border-radius: 2px;
+            animation: loadingProgress 2.5s ease forwards;
+            position: relative;
+        }
+
+        .loading-bar::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: -20px;
+            width: 20px;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4));
+            animation: shimmer 1.5s linear infinite;
+        }
+
+        .cosmic-bg {
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at 20% 30%, rgba(124,92,255,0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 70%, rgba(0,229,255,0.08) 0%, transparent 50%),
+                        radial-gradient(circle at 40% 80%, rgba(61,227,138,0.06) 0%, transparent 50%);
+        }
+
+        .stars {
+            position: absolute;
+            inset: 0;
+            background-image: 
+                radial-gradient(2px 2px at 20px 30px, #eee, transparent),
+                radial-gradient(2px 2px at 40px 70px, rgba(255,255,255,0.8), transparent),
+                radial-gradient(1px 1px at 90px 40px, rgba(255,255,255,0.6), transparent),
+                radial-gradient(1px 1px at 130px 80px, #fff, transparent),
+                radial-gradient(2px 2px at 160px 30px, rgba(255,255,255,0.4), transparent);
+            background-size: 200px 100px;
+            animation: twinkle 3s linear infinite;
+        }
+
+        @keyframes logoGlow {
+            0% { 
+                filter: drop-shadow(0 0 20px rgba(124,92,255,0.3));
+            }
+            100% { 
+                filter: drop-shadow(0 0 40px rgba(124,92,255,0.6));
+            }
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+        }
+
+        @keyframes loadingProgress {
+            to { width: 100%; }
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-20px); }
+            100% { transform: translateX(320px); }
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
+        }
+
+        .main-content {
+            opacity: 0;
+            transition: opacity 0.5s ease 0.3s;
+        }
+
+        .main-content.visible {
+            opacity: 1;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* Hero Section */
+        .hero {
+            position: relative;
+            padding: 4rem 0;
+            text-align: center;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(800px 420px at 50% 0%, rgba(124,92,255,0.18), transparent 70%);
+            pointer-events: none;
+        }
+
+        .hero h1 {
+            font-size: clamp(2.5rem, 8vw, 4rem);
+            font-weight: 700;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: var(--muted);
+            margin-bottom: 2rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Project Grid */
+        .project-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        .project-card {
+            background: var(--bg-elev);
+            border: 1px solid var(--line);
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .project-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent-1), var(--accent-2), var(--accent-3));
+        }
+
+        .project-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-1);
+            border-color: var(--accent-1);
+        }
+
+        .project-card h3 {
+            color: var(--accent-2);
+            font-weight: 600;
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+
+        .project-card p {
+            color: var(--muted);
+            margin-bottom: 1.5rem;
+            line-height: 1.7;
+        }
+
+        .tech-stack {
+            margin-top: 1rem;
+            color: var(--accent-3);
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .project-link {
+            margin-top: 0.5rem;
+            color: var(--accent-1);
+            font-size: 0.9rem;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .project-link:hover {
+            color: var(--accent-2);
+        }
+
+        .demo-section {
+            background: var(--bg-elev);
+            border-radius: var(--radius-lg);
+            padding: 3rem 0;
+            margin: 4rem 0;
+        }
+
+        .demo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .demo-card {
+            background: var(--bg);
+            border: 1px solid var(--line);
+            border-radius: var(--radius-md);
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .demo-card:hover {
+            border-color: var(--accent-3);
+            transform: translateY(-2px);
+        }
+
+        .demo-card h4 {
+            color: var(--accent-1);
+            margin-bottom: 1rem;
+        }
+
+        .play-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.8rem 1.5rem;
+            background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
+            color: white;
+            text-decoration: none;
+            border-radius: var(--radius-md);
+            font-weight: 500;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+        }
+
+        .play-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(124,92,255,0.4);
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--accent-2), var(--accent-3));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Community Section */
+        .community-section {
+            text-align: center;
+            padding: 2rem 0;
+            background: var(--bg-elev);
+            border-radius: var(--radius-lg);
+            margin-top: 2rem;
+        }
+
+        .community-section h2 {
+            color: var(--accent-2);
+            margin-bottom: 1rem;
+        }
+
+        .community-links {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 2rem;
+        }
+
+        .community-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 1rem 2rem;
+            text-decoration: none;
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .discord-btn {
+            background: linear-gradient(135deg, #5865F2, #7289DA);
+            color: white;
+        }
+
+        .github-btn {
+            background: linear-gradient(135deg, #333, #666);
+            color: white;
+        }
+
+        .community-btn:hover {
+            transform: scale(1.05);
+        }
+
+        @media (max-width: 768px) {
+            .project-grid {
+                grid-template-columns: 1fr;
+            }
+            .demo-grid {
+                grid-template-columns: 1fr;
+            }
+            .community-links {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- ⪧•──────⪧✿⪦── 🦋──⪧✿──────⪦ ◯ 🌸 ◯ ──────⪧✿───────⪧✿───────⪦ --->
+    <!--                SPLASH SCREEN: cosmic loading overlay                --->
+    <!-- ⪧──•───✿⪦──────⪧•────────⪧✿⪦ ◯ 🌸 ◯ ✿⪦────⪧•───🐞───✿⪦────•⪦ --->
+    
+    <div class="splash-screen" id="splashScreen">
+        <div class="cosmic-bg"></div>
+        <div class="stars"></div>
+        <div class="splash-content">
+            <div class="splash-logo">ᴀrᴛ☠mj☠ᴅev</div>
+            <div class="splash-tagline">♾️ where technology and art meet ♾️</div>
+            <div class="loading-bar-container">
+                <div class="loading-bar"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container main-content" id="mainContent">
+        <!-- Hero Section -->
+        <section class="hero">
+            <h1 class="section-title">ᴀrᴛ☠mj☠ᴅev</h1><p>𝐚𝐫𝐭𝐢𝐬𝐭𝐢𝐜  d̶e̶v̶i̶l̶ 𝐝𝐞𝐯𝐞𝐥𝐨𝐩𝐞𝐫</p>
+            <p>♾️ai research, interactive games, creative tools♾️</p><p>ͼ<⚈>𓂏<⚈>ͽ<p>♾️exploring where technology and art meet♾️</p>
+        </section>
+
+        <!-- Main Projects -->
+        <section>
+            <h2 class="section-title">🕱 Featured ☠ Projects 🕱</h2>
+            <div class="project-grid">
+                <!-- RP.AI Studio -->
+                <div class="project-card">
+                    <h3>🔹RP.ai💠Studio🔹</h3>
+                    <p>Discord bot builder that creates intelligent chatbots with 20-message memory systems for roleplay and interactive conversations.</p>
+                    <div class="tech-stack">🔹.html • discord/py • api/self hosting tutorial🔹</div>
+                    <a href="https://rp-ai-studio.netlify.app/" target="_blank" class="project-link">🌐view project</a>
+                </div>
+
+                <!-- Gemini's Sense of Self -->
+                <div class="project-card">
+                    <h3>💠gemini's🔹 sense🔹of🔹self💠</h3>
+                    <p>continued and current longitudinal research starting in 2023 tracking awareness and self perception in google's ai models (from Bard → current Gemini)</p>
+                    <div class="tech-stack">🔹ai research • data analysis • longitudinal study🔹</div>
+                    <a href="https://geminisenseofself.netlify.app/" target="_blank" class="project-link">🔤read research</a>
+                </div>
+
+                <!-- UHNN Research -->
+                <div class="project-card">
+                    <h3>💠unified🔹holographic🔹neural🔹network🔹research💠</h3>
+                    <p>researching the integration of the unified holographic neural network by Francisco Angulo de Lafuente with data sonification for visual and auditory data, studying llm memory systems</p>
+                    <div class="tech-stack">💠neural networks • data sonification • LLM memory • holographic memory💠</div>
+                    <a href="https://maybejmaybe.com/tsoho" target="_blank" class="project-link">🔤read research</a>
+                </div>
+
+                <!-- Celestia AI -->
+                <div class="project-card">
+                    <h3>💠Celesti🔹 AI💠</h3>
+                    <p>Creative AI interface with cosmic theming and elegant design, built for intuitive interaction with AI systems for creative users.</p>
+                    <div class="tech-stack">🔹.html • .css • .js • ux/ui🔹</div>
+                    <div style="margin-top: 0.5rem; color: var(--accent-2); font-size: 0.8rem;">Status: In Development</div>
+                </div>
+
+                <!-- Toot Save World -->
+                <div class="project-card">
+                    <h3>💠Toot🔹Save🔹World💠</h3>
+                    <p>Whimsical HTML5 platformer game featuring Toot the cloud character and Llama Brain on a cosmic adventure with original soundtrack and hand-crafted assets.</p>
+                    <div class="tech-stack">🔹.html • .js • .mp3 • .mp4 • .wav • .gif🔹</div>
+                    <div style="margin-top: 0.5rem; color: var(--accent-3); font-size: 0.8rem;">multiple levels and interactive storytelling</div>
+                </div>
+
+                <!-- Creative Media -->
+                <div class="project-card">
+                    <h3>♾️creative🩵media🩵production♾️</h3>
+                    <p>original music, character voice work, video content creation, and multimedia storytelling for interactive experiences.</p>
+                    <div class="tech-stack">🔹.mp4 • .gif • .html • .md • .txt🔹</div>
+                    <a href="https://soundcloud.com/at-the-studio" target="_blank" class="project-link">💠SoundCloud💠</a>
+                    <a href="https://discord.gg/the-studio" target="_blank" class="project-link">💠The🔹Studio💠</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Toot Game Demos -->
+        <section class="demo-section">
+            <div class="container">
+                <h2 class="section-title">💠Toot🔹Save🔹World🔹Game🔹Demos💠</h2>
+                <p style="text-align: center; color: var(--muted); margin-bottom: 2rem;">
+                    interactive platformer levels featuring toot and llama Brain
+                </p>
+                <div class="demo-grid">
+                    <!-- Toot and Llama profile page -->
+                    <!-- Toot and Llama Profile -->
+                    <div class="demo-card">
+                        <h4>💠Toot🔹and🔹Llama🔹Brain💠</h4>
+                        <p>Meet the hero that saved the world and his bff llama brain.</p>
+                        <a href="https://maybejmaybe.com/llamabrain-and-toot/" target="_blank" class="play-btn">
+                            ▶️ visit
+                        </a>
+                    </div>
+                    <!--💠Movement🔹Training💠-->
+                    <div class="demo-card">
+                        <h4>🔹Movement💠Training🔹</h4>
+                        <p>Learn toot's basic movement, jumping, and fart boost mechanics in this tutorial level. Press F to power toot through the level, and ⇦⇧⇨ for navigation.</p>
+                        <a href="https://toot-save-world.netlify.app/" target="_blank" class="play-btn">
+                            ▶️ play
+                        </a>
+                    </div>
+
+                    <!-- Poppercorn Paradise -->
+                    <div class="demo-card">
+                        <h4>🔹 Poppercorn💠Paradise🔹</h4>
+                        <p>Help Toot collect poppercorn in this colorful platformer level with poppercorn collectibles.</p>
+                        <a href="https://poppercorn-paradise.netlify.app/" target="_blank" class="play-btn">
+                            ▶️ play
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Community Section -->
+        <section class="community-section">
+            <h2>♾️socials♾️</h2>
+            <p style="color: var(--muted); margin-bottom: 1rem;">Join the conversation about AI, game development, and creative projects</p>
+            <div class="community-links">
+                <a href="https://discord.gg/Gh6RjYfkxu" target="_blank" class="community-btn discord-btn">
+                    💠 All🔹Things🔹AI🔹Discord 💠
+                </a>
+                <a href="https://github.com/the-meta-value" target="_blank" class="community-btn github-btn">
+                    💠 GitHub🔹Profile 💠
+                </a>
+                <a href="mailto:maybejustmaybe@allthingsai.cloud" class="community-btn" style="background: linear-gradient(135deg, #7c5cff, #00e5ff); color: white;">
+                    💠 Email🔹Contact 💠
+                </a>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // ╭─────────────────────────────────────────────────────── ♱ · 𓆩🤍𓆪 · ♱ ─╮
+        //              SPLASH SCREEN: loading animation controller
+        // ╰─ ♱ · 𓆩🤍𓆪 · ♱ ───────────────────────────────────────────────────────╯
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            const splashScreen = document.getElementById('splashScreen');
+            const mainContent = document.getElementById('mainContent');
+            
+            // Hide splash screen after loading animation completes
+            setTimeout(() => {
+                splashScreen.classList.add('fade-out');
+                
+                // Show main content after splash fades
+                setTimeout(() => {
+                    mainContent.classList.add('visible');
+                }, 300);
+                
+            }, 3000); // 3 second splash duration
+        });
+
+        // ╭─────────────────────────────────────────────────────── ♱ · 𓆩🤍𓆪 · ♱ ─╮
+        //                    ANALYTICS: demo tracking system
+        // ╰─ ♱ · 𓆩🤍𓆪 · ♱ ───────────────────────────────────────────────────────╯
+        
+        // Simple analytics for demo views
+        console.log('🔹 Portfolio loaded!');
+        
+        // Track which demos are clicked
+        document.querySelectorAll('.play-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const demoName = e.target.closest('.demo-card').querySelector('h4').textContent;
+                console.log('🔹 Demo played:', demoName);
+            });
+        });
+    </script>
+</body>
+</html>
